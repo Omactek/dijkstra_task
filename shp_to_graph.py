@@ -53,7 +53,4 @@ Pts_all.insert(0, [1000000, 1000000])
 
 # Edges to graph
 P_ids = pointsToIDs(Pts_all)
-G = edgesToGraph(P_ids, Start_pts, End_pts, W)
-
-print("Point IDs:", P_ids)
-print("Graph:", G) #result as 2: ({1: [1.3535754744, 1.35345461349, 70], 3: [0.450951656971, 0.44945385647, 70]}, [12.104227900197486, 50.23602740014445])
+G = edgesToGraph(P_ids, Start_pts, End_pts, W) #result as 2: ({1: [1.3535754744, 1.35345461349, 70], 3: [0.450951656971, 0.44945385647, 70]}, [12.104227900197486, 50.23602740014445])
