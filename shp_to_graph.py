@@ -42,9 +42,27 @@ def edgesToGraph(P_ids, Start_pts, End_pts, Weights):
 
     return G # as {point_id: ({neighbour_point_id: [DISTANCE, STRAIGHT_DISTANCE, MAXSPEED], ..more neighbours}, [coordinates of point_id])
 
+def find_city_nodes(city_shp_path, P_ids):
+    city_data = gpd.read_file(city_shp_path)
+
+    city_nodes = {}
+
+    for idx, row in city_data.iterrows():
+        city_coords = (row.geometry.x, row.geometry.y)
+        city_name = row.get('name', 'Unknown')
+        
+        # Checks if the city coordinates match any node in the graph
+        if city_coords in P_ids:
+            node_id = P_ids[city_coords]
+            city_nodes[node_id] = city_name
+
+    return city_nodes
+
 # Load edges from shp
 shp_path = r'D:\MGR\1_semestr\Geoinformatika\dijkstra\data\roads_data.shp'
-Start_pts, End_pts, W = loadEdgesFromShp(shp_path)
+cities_shp_path = r'D:\MGR\1_semestr\Geoinformatika\dijkstra\data\towns.shp'
+
+Start_pts, End_pts, Weights = loadEdgesFromShp(shp_path)
 
 # Merge lists and remove unique points
 Pts_all = Start_pts + End_pts
@@ -53,4 +71,9 @@ Pts_all.insert(0, [1000000, 1000000])
 
 # Edges to graph
 P_ids = pointsToIDs(Pts_all)
-G = edgesToGraph(P_ids, Start_pts, End_pts, W) #result as 2: ({1: [1.3535754744, 1.35345461349, 70], 3: [0.450951656971, 0.44945385647, 70]}, [12.104227900197486, 50.23602740014445])
+Graph = edgesToGraph(P_ids, Start_pts, End_pts, Weights) #result as 2: ({1: [1.3535754744, 1.35345461349, 70], 3: [0.450951656971, 0.44945385647, 70]}, [12.104227900197486, 50.23602740014445])
+city_nodes = find_city_nodes(cities_shp_path, P_ids)
+
+print("Node IDs:", P_ids)
+print("Graph:", Graph)
+print("City nodes:", city_nodes)
