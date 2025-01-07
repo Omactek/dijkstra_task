@@ -18,7 +18,15 @@ class Dijkstra:
     def __init__(self, graph):
         self.graph = graph
 
-    def shortest_path(self, start, end):
+    def calc_weight(self, weights, mode="basic"):
+        if mode=="basic": #basic planar distance
+            return weights[1]
+        elif mode=="advanced": #takes into account roads and speed
+            return weights[0]/weights[2]
+        else:
+            raise ValueError(f"Invalid mode: {mode}. Mode should be either 'basic' or 'advanced'.")
+
+    def shortest_path(self, start, end, mode="basic"):
         num_nodes = len(self.graph.neighbours)
         parents = [-1] * (num_nodes + 1)
         dists = [np.inf] * (num_nodes + 1)
@@ -35,7 +43,8 @@ class Dijkstra:
             if cur_distance > dists[cur_node]:
                 continue
 
-            for neighbour, weight in self.graph.get_neighbours(cur_node).items():
+            for neighbour, weights in self.graph.get_neighbours(cur_node).items():
+                weight = self.calc_weight(weights, mode)
                 new_dist = cur_distance + weight
                 if dists[neighbour] > new_dist:
                     dists[neighbour] = new_dist
@@ -49,7 +58,7 @@ class Dijkstra:
         path = []
         cur_node = end
 
-        while cur_node != start_node and cur_node != -1:
+        while cur_node != start and cur_node != -1:
             path.append(cur_node)
             cur_node = parents[cur_node]
 
@@ -71,13 +80,3 @@ graph_data = {
     9: ({4: 3, 6: 10, 8: 1}, [412, 196])
 }
 
-graph = Graph()
-graph.populate_graph(graph_data)
-dijkstra = Dijkstra(graph)
-start_node, end_node = 1, 9
-
-shortest_distance, parents = dijkstra.shortest_path(start_node, end_node)
-shortest_path = dijkstra.reconstruct_path(start_node, end_node, parents)
-print(f"Shortest Path: {shortest_path}")
-print(f"Shortest Distance: {shortest_distance}")
-print(f"Parents: {parents}")

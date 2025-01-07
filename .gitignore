@@ -12,6 +12,7 @@ __pycache__/
 
 # Data folder
 data
+backup
 
 # Distribution / packaging
 .Python

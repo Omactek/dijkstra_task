@@ -1,6 +1,7 @@
 import geopandas as gpd
 import numpy as np
 from collections import defaultdict
+import json
 
 def loadEdgesFromShp(shp_path):
     shp = gpd.read_file(shp_path)
@@ -58,9 +59,28 @@ def find_city_nodes(city_shp_path, P_ids):
 
     return city_nodes
 
+
+def save_to_json(graph, city_nodes, filename):
+    json_graph = {
+        node_id: {
+            "coords": coords,
+            "neighbors": {neighbor_id: weights for neighbor_id, weights in neighbors.items()}
+        }
+        for node_id, (neighbors, coords) in graph.items()
+    }
+    
+    #combine graph and city nodes
+    json_data = {
+        "graph": json_graph,
+        "city_nodes": city_nodes
+    }
+
+    with open(filename, "w") as f:
+        json.dump(json_data, f, indent=4)
+
 # Load edges from shp
-shp_path = r'D:\MGR\1_semestr\Geoinformatika\dijkstra\data\roads_data.shp'
-cities_shp_path = r'D:\MGR\1_semestr\Geoinformatika\dijkstra\data\towns.shp'
+shp_path = r'data\roads_data.shp'
+cities_shp_path = r'data\towns.shp'
 
 Start_pts, End_pts, Weights = loadEdgesFromShp(shp_path)
 
@@ -77,3 +97,5 @@ city_nodes = find_city_nodes(cities_shp_path, P_ids)
 print("Node IDs:", P_ids)
 print("Graph:", Graph)
 print("City nodes:", city_nodes)
+
+save_to_json(Graph, city_nodes, "graph_data.json")
