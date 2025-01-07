@@ -15,7 +15,6 @@ def load_graph_and_cities_from_json(json_path):
         for node_id, node_data in data["graph"].items()
     }
 
-    # Load city nodes (no conversion needed)
     city_nodes = {int(node_id): city_name for node_id, city_name in data["city_nodes"].items()}
 
     return graph, city_nodes
@@ -26,7 +25,7 @@ graph = Graph()
 graph.populate_graph(graph_data)
 
 dijkstra = Dijkstra(graph)
-start_node, end_node = 100, 160
+start_node, end_node = 126326, 66515
 
 shortest_distance, parents = dijkstra.shortest_path(start_node, end_node)
 shortest_path = dijkstra.reconstruct_path(start_node, end_node, parents)

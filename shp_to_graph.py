@@ -75,7 +75,7 @@ def save_to_json(graph, city_nodes, filename):
         "city_nodes": city_nodes
     }
 
-    with open(filename, "w") as f:
+    with open(filename, "w", encoding="utf-8") as f:
         json.dump(json_data, f, indent=4)
 
 # Load edges from shp
@@ -94,8 +94,5 @@ P_ids = pointsToIDs(Pts_all)
 Graph = edgesToGraph(P_ids, Start_pts, End_pts, Weights) #result as 2: ({1: [1.3535754744, 1.35345461349, 70], 3: [0.450951656971, 0.44945385647, 70]}, [12.104227900197486, 50.23602740014445])
 city_nodes = find_city_nodes(cities_shp_path, P_ids)
 
-print("Node IDs:", P_ids)
-print("Graph:", Graph)
-print("City nodes:", city_nodes)
-
 save_to_json(Graph, city_nodes, "graph_data.json")
+print(city_nodes)
