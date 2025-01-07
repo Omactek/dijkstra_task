@@ -5,6 +5,7 @@ class Graph:
     def __init__(self):
         self.neighbours = {}
         self.coords = {}
+        self.cities = {}
 
     def populate_graph(self, graph_data): #expects {1: ({2: 8, 3: 4}, [95, 322])}
         for node, (neighbours, coords) in graph_data.items():
@@ -13,6 +14,13 @@ class Graph:
 
     def get_neighbours(self, node):
         return self.neighbours.get(node)
+    
+    def populate_cities(self, city_nodes):
+        for city_id, name in city_nodes.items():
+            self.cities[city_id] = name
+
+    def get_city(self, city_id):
+        return self.cities[city_id]
     
 class ShortestPath:
     def __init__(self, graph):
@@ -101,4 +109,3 @@ graph_data = {
     8: ({2: 7, 6: 7, 7: 3, 9: 1}, [333, 225]),
     9: ({4: 3, 6: 10, 8: 1}, [412, 196])
 }
-
