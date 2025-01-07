@@ -14,7 +14,7 @@ class Graph:
     def get_neighbours(self, node):
         return self.neighbours.get(node)
     
-class Dijkstra:
+class ShortestPath:
     def __init__(self, graph):
         self.graph = graph
 
@@ -26,7 +26,7 @@ class Dijkstra:
         else:
             raise ValueError(f"Invalid mode: {mode}. Mode should be either 'basic' or 'advanced'.")
 
-    def shortest_path(self, start, end, mode="basic"):
+    def dijkstra(self, start, end, mode="basic"):
         num_nodes = len(self.graph.neighbours)
         parents = [-1] * (num_nodes + 1)
         dists = [np.inf] * (num_nodes + 1)
@@ -52,6 +52,28 @@ class Dijkstra:
                     heapq.heappush(pq, (new_dist, neighbour))
 
         return dists[end], parents
+    
+    def bellman_ford(self, start, mode="basic"):
+        num_nodes = len(self.graph.neighbours)
+        parents = [-1] * (num_nodes + 1)
+        dists = [np.inf] * (num_nodes + 1)
+
+        dists[start] = 0 #init weight of starting node
+
+        for _ in range(num_nodes - 1): #number of relaxations
+            for cur_node in range(1, num_nodes + 1):
+                for neighbour, weights in self.graph.get_neighbours(cur_node).items():
+                    weight = self.calc_weight(weights, mode)
+                    if dists[cur_node] + weight < dists[neighbour]:
+                        dists[neighbour] = dists[cur_node] + weight
+                        parents[neighbour] = cur_node
+
+        #check for negative cycle
+        for cur_node in range(num_nodes + 1):
+            for neighbour, weights in self.graph.get_neighbours(cur_node).items():
+                weight = self.calc_weight(weights, mode)
+                if dists[cur_node] + weight < dists[neighbour]:
+                    raise ValueError("Negative weight cycle in graph")
 
     @staticmethod
     def reconstruct_path(start, end, parents):

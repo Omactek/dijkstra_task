@@ -1,4 +1,4 @@
-from dijkstra import Graph, Dijkstra
+from algorithms import Graph, ShortestPath
 import json
 
 json_path = "graph_data.json"
@@ -24,10 +24,16 @@ graph_data, city_nodes = load_graph_and_cities_from_json(json_path)
 graph = Graph()
 graph.populate_graph(graph_data)
 
-dijkstra = Dijkstra(graph)
-start_node, end_node = 126326, 66515
+algorithm = ShortestPath(graph)
+start_node, end_node = 100000, 5345
 
-shortest_distance, parents = dijkstra.shortest_path(start_node, end_node)
-shortest_path = dijkstra.reconstruct_path(start_node, end_node, parents)
+shortest_distance, parents = algorithm.dijkstra(start_node, end_node)
+shortest_path = algorithm.reconstruct_path(start_node, end_node, parents)
 print(f"Shortest Path: {shortest_path}")
 print(f"Shortest Distance: {shortest_distance}")
+
+bell_dist, bell_parents = algorithm.bellman_ford(start_node)
+shortest_bell = algorithm.reconstruct_path(start_node, end_node, bell_parents)
+
+print(f"Shortest Path: {bell_dist}")
+print(f"Shortest Distance: {shortest_bell}")
