@@ -27,9 +27,7 @@ graph.populate_cities(city_nodes)
 
 algorithm = ShortestPath(graph)
 mst = algorithm.kruskal()
-print(mst)
-quit()
-start_node, end_node = 100000, 5345
+start_node, end_node = 1000, 8000
 
 shortest_distance, parents = algorithm.dijkstra(start_node, end_node)
 shortest_path = algorithm.reconstruct_path(start_node, end_node, parents)

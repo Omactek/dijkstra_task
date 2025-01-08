@@ -79,7 +79,7 @@ def save_to_json(graph, city_nodes, filename):
         json.dump(json_data, f, indent=4)
 
 # Load edges from shp
-shp_path = r'data\roads_data.shp'
+shp_path = r'data\roads_data_lib.shp'
 cities_shp_path = r'data\towns.shp'
 
 Start_pts, End_pts, Weights = loadEdgesFromShp(shp_path)
@@ -87,7 +87,6 @@ Start_pts, End_pts, Weights = loadEdgesFromShp(shp_path)
 # Merge lists and remove unique points
 Pts_all = Start_pts + End_pts
 Pts_all = np.unique(Pts_all, axis=0).tolist()
-Pts_all.insert(0, [1000000, 1000000])
 
 # Edges to graph
 P_ids = pointsToIDs(Pts_all)
