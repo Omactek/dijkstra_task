@@ -24,20 +24,24 @@ graph_data, city_nodes = load_graph_and_cities_from_json(json_path)
 graph = Graph()
 graph.populate_graph(graph_data)
 graph.populate_cities(city_nodes)
-
 algorithm = ShortestPath(graph)
-mst = algorithm.kruskal()
+
 start_node, end_node = 1000, 8000
+mode = "advanced" #basic (euclidean distance), advanced (time)
 
-shortest_distance, parents = algorithm.dijkstra(start_node, end_node)
+mst = algorithm.kruskal()
+print(mst)
+
+shortest_distance, parents = algorithm.dijkstra(start_node, end_node, mode=mode)
 shortest_path = algorithm.reconstruct_path(start_node, end_node, parents)
-print(f"Shortest Path: {shortest_path}")
-print(f"Shortest Distance: {shortest_distance}")
+#print(f"Shortest Path Dijkstra: {shortest_path}")
+print(f"Shortest Distance Dijkstra: {shortest_distance}")
 
-algorithm.calculate_combinations("combinations.json", limit=10)
+algorithm.calculate_combinations("combinations.json", limit=10, mode=mode)
 
-bell_dist, bell_parents = algorithm.bellman_ford(start_node)
-shortest_bell = algorithm.reconstruct_path(start_node, end_node, bell_parents)
+bell_dists, bell_parents = algorithm.bellman_ford(start_node, mode=mode)
+shortest_dist_bell = bell_dists[end_node]
+shortest_bell_path = algorithm.reconstruct_path(start_node, end_node, bell_parents)
 
-print(f"Shortest Path: {bell_dist}")
-print(f"Shortest Distance: {shortest_bell}")
+#print(f"Shortest Path Bell: {shortest_bell_path}")
+print(f"Shortest Distance Bell: {shortest_dist_bell}")

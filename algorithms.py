@@ -71,7 +71,7 @@ class ShortestPath:
         dists[start] = 0 #init weight of starting node
 
         for _ in range(num_nodes - 1): #number of relaxations
-            for cur_node in range(1, num_nodes + 1):
+            for cur_node in range(1, num_nodes):
                 for neighbour, weights in self.graph.get_neighbours(cur_node).items():
                     weight = self.calc_weight(weights, mode)
                     if dists[cur_node] + weight < dists[neighbour]:
@@ -79,11 +79,13 @@ class ShortestPath:
                         parents[neighbour] = cur_node
 
         #check for negative cycle
-        for cur_node in range(num_nodes + 1):
+        for cur_node in range(num_nodes):
             for neighbour, weights in self.graph.get_neighbours(cur_node).items():
                 weight = self.calc_weight(weights, mode)
                 if dists[cur_node] + weight < dists[neighbour]:
                     raise ValueError("Negative weight cycle in graph")
+                
+        return dists, parents
                 
     def kruskal(self, mode="basic"):
         edges = [] #weight, node, neighbour
@@ -125,7 +127,7 @@ class ShortestPath:
         
         return path[::-1]
     
-    def calculate_combinations(self, filename, limit=None):
+    def calculate_combinations(self, filename, limit=None, mode="basic"):
         city_nodes = self.graph.cities
 
         if limit:   #only takes first x cities
@@ -137,7 +139,7 @@ class ShortestPath:
         shortest_paths = {}
 
         for start_id, end_id in city_combinations:
-            distance, parents = self.dijkstra(start_id, end_id)
+            distance, parents = self.dijkstra(start_id, end_id, mode)
             path = self.reconstruct_path(start_id, end_id, parents)
             start_name = self.graph.get_city(start_id)
             end_name = self.graph.get_city(end_id)
