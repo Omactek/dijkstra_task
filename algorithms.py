@@ -1,5 +1,7 @@
 import heapq
 import numpy as np
+from itertools import combinations
+import json
 
 class Graph:
     def __init__(self):
@@ -97,6 +99,31 @@ class ShortestPath:
             print("Incorrect path")
         
         return path[::-1]
+    
+    def calculate_combinations(self, filename, limit=None):
+        city_nodes = self.graph.cities
+
+        if limit:   #only takes first x cities
+            filtered_city_nodes = dict(list(city_nodes.items())[:limit])    
+        else:
+            filtered_city_nodes = city_nodes
+
+        city_combinations = list(combinations(filtered_city_nodes.keys(), 2))
+        shortest_paths = {}
+
+        for start_id, end_id in city_combinations:
+            distance, parents = self.dijkstra(start_id, end_id)
+            path = self.reconstruct_path(start_id, end_id, parents)
+            start_name = self.graph.get_city(start_id)
+            end_name = self.graph.get_city(end_id)
+
+            shortest_paths[f"({start_name}, {end_name})"] = {
+                "distance": distance,
+                "path": path
+            }
+
+        with open(filename, "w") as f:
+            json.dump(shortest_paths, f, indent=4)
         
 graph_data = {
     1: ({2: 8, 3: 4, 5: 2}, [95, 322]),
