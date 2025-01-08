@@ -84,6 +84,31 @@ class ShortestPath:
                 weight = self.calc_weight(weights, mode)
                 if dists[cur_node] + weight < dists[neighbour]:
                     raise ValueError("Negative weight cycle in graph")
+                
+    def kruskal(self, mode="basic"):
+        edges = [] #weight, node, neighbour
+
+        for node, neighbours in self.graph.neighbours.items():
+            for neighbour, weights in neighbours.items():
+                weight = self.calc_weight(weights, mode)
+                if (weight, node, neighbour) not in edges:
+                    edges.append((weight, node, neighbour))
+
+        edges.sort(key=lambda x: x[0]) #sort by weight
+
+        nodes = list(self.graph.neighbours.keys())
+        disj_set = DisjointSet(nodes)
+
+        min_span_tree = []
+
+        for weight, node, neighbour in edges:
+            root_node = disj_set.find(node)
+            root_neigh = disj_set.find(neighbour)
+            if root_node != root_neigh:
+                min_span_tree.append(((weight, node, neighbour)))
+                disj_set.union(root_node, root_neigh)
+
+        return min_span_tree
 
     @staticmethod
     def reconstruct_path(start, end, parents):
@@ -125,14 +150,21 @@ class ShortestPath:
         with open(filename, "w") as f:
             json.dump(shortest_paths, f, indent=4)
         
-graph_data = {
-    1: ({2: 8, 3: 4, 5: 2}, [95, 322]),
-    2: ({1: 8, 3: 5, 4: 2, 7: 6, 8: 7}, [272, 331]),
-    3: ({1: 4, 2: 5, 6: 3, 7: 4}, [173, 298]),
-    4: ({2: 2, 9: 3}, [361, 299]),
-    5: ({1: 2, 6: 5}, [82, 242]),
-    6: ({3: 3, 5: 5, 7: 5, 8: 7, 9: 10}, [163, 211]),
-    7: ({2: 6, 3: 4, 6: 5, 8: 3}, [244, 234]),
-    8: ({2: 7, 6: 7, 7: 3, 9: 1}, [333, 225]),
-    9: ({4: 3, 6: 10, 8: 1}, [412, 196])
-}
+class DisjointSet:
+    def __init__(self, nodes):
+        self.parents = {node: node for node in nodes}
+        self.ranks = {node: 0 for node in nodes}
+
+    def find(self, node):
+        if self.parents[node] != node:
+            self.parents[node] = self.find(self.parents[node])
+        return self.parents[node]
+    
+    def union(self, root1, root2):
+        if self.ranks[root1] > self.ranks[root2]:
+            self.parents[root2] = root1
+        elif self.ranks[root1] < self.ranks[root2]:
+            self.parents[root1] = root2
+        else:
+            self.parents[root2] = root1
+            self.ranks[root1] += 1

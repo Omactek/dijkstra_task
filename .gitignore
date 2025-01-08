@@ -15,6 +15,7 @@ data
 backup
 graph_data.json
 combinations.json
+tempCodeRunnerFile.py
 
 # Distribution / packaging
 .Python
