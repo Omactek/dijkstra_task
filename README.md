@@ -61,8 +61,8 @@ Contains the following classes and their functionalities:
 ### 1. Preparing Data
 
 - If you want to use your own `.shp` data, ensure the data have correct format and include attributes named 'lenght'(lenght of the edge (km), float), 'vzd_fl'(straigh lenght (km), float), 'maxspeed'(maximum speed, integer)
-- Convert the data into a graph running `shp_to_graph.py` script
-  This script generates a `graph_data.json` file containing the graph structure and city nodes.
+- Convert the data into a graph running `shp_to_graph.py` script. This script generates a `graph_data.json` file containing the graph structure and city nodes.
+- You can also use prepared dataset of roads and cities from Liberec region, Czechia.
 
 ### 2. Running the Application
 
