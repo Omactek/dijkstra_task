@@ -44,7 +44,7 @@ def edgesToGraph(P_ids, Start_pts, End_pts, Weights):
     return G # as {point_id: ({neighbour_point_id: [DISTANCE, STRAIGHT_DISTANCE, MAXSPEED], ..more neighbours}, [coordinates of point_id])
 
 def find_city_nodes(city_shp_path, P_ids):
-    city_data = gpd.read_file(city_shp_path)
+    city_data = gpd.read_file(city_shp_path, encoding="UTF-8")
 
     city_nodes = {}
 
@@ -75,8 +75,8 @@ def save_to_json(graph, city_nodes, filename):
         "city_nodes": city_nodes
     }
 
-    with open(filename, "w", encoding="utf-8") as f:
-        json.dump(json_data, f, indent=4)
+    with open(filename, "w", encoding="UTF-8") as f:
+        json.dump(json_data, f, ensure_ascii=False, indent=4)
 
 # Load edges from shp
 shp_path = r'data\roads_data_lib.shp'
