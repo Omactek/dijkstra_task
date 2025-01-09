@@ -1,10 +1,11 @@
+import tkinter as tk
+from tkinter import ttk
 from algorithms import Graph, ShortestPath
+from interface import ShortestPathApp
 import json
 
-json_path = "graph_data.json"
-
 def load_graph_and_cities_from_json(json_path):
-    with open(json_path, "r") as f:
+    with open(json_path, "r", encoding="utf-8") as f:
         data = json.load(f)
 
     graph = {
@@ -19,6 +20,7 @@ def load_graph_and_cities_from_json(json_path):
 
     return graph, city_nodes
 
+json_path = "graph_data.json"
 graph_data, city_nodes = load_graph_and_cities_from_json(json_path)
 
 graph = Graph()
@@ -26,22 +28,7 @@ graph.populate_graph(graph_data)
 graph.populate_cities(city_nodes)
 algorithm = ShortestPath(graph)
 
-start_node, end_node = 1000, 8000
-mode = "advanced" #basic (euclidean distance), advanced (time)
-
-mst = algorithm.kruskal()
-print(mst)
-
-shortest_distance, parents = algorithm.dijkstra(start_node, end_node, mode=mode)
-shortest_path = algorithm.reconstruct_path(start_node, end_node, parents)
-#print(f"Shortest Path Dijkstra: {shortest_path}")
-print(f"Shortest Distance Dijkstra: {shortest_distance}")
-
-algorithm.calculate_combinations("combinations.json", limit=10, mode=mode)
-
-bell_dists, bell_parents = algorithm.bellman_ford(start_node, mode=mode)
-shortest_dist_bell = bell_dists[end_node]
-shortest_bell_path = algorithm.reconstruct_path(start_node, end_node, bell_parents)
-
-#print(f"Shortest Path Bell: {shortest_bell_path}")
-print(f"Shortest Distance Bell: {shortest_dist_bell}")
+if __name__ == "__main__":
+    root = tk.Tk()
+    app = ShortestPathApp(root, algorithm)
+    root.mainloop()
