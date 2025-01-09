@@ -149,7 +149,7 @@ class ShortestPath:
                 "path": path
             }
 
-        with open(filename, "w") as f:
+        with open(filename, "w", encoding="utf-8") as f:
             json.dump(shortest_paths, f, indent=4)
         
 class DisjointSet:
