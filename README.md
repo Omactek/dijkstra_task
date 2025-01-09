@@ -55,3 +55,23 @@ Contains the following classes and their functionalities:
      - `kruskal(mode)`: Implements Kruskal's algorithm for Minimum Spanning Tree.
      - `reconstruct_path(start, end, parents)`: Reconstructs the path from parent nodes.
      - `calculate_combinations(filename, limit, mode)`: Calculates paths for each 2 cities combinations and saves results in a json format.
+
+## Usage
+
+### 1. Preparing Data
+
+- If you want to use your own `.shp` data, ensure the data have correct format and include attributes named 'lenght'(lenght of the edge (km), float), 'vzd_fl'(straigh lenght (km), float), 'maxspeed'(maximum speed, integer)
+- Convert the data into a graph running `shp_to_graph.py` script
+  This script generates a `graph_data.json` file containing the graph structure and city nodes.
+
+### 2. Running the Application
+
+- Launch the GUI application **main.py**
+- Select start and end cities from the dropdown menus.
+- Click **Calculate Path** to compute:
+  - The shortest distance using Dijkstra's algorithm.
+  - The fastest travel time considering road speeds and types using Dijkstra's algorithm.
+  - The shortest path using the Bellman-Ford algorithm, accounting for possible negative weights.
+  - All shortest paths for combinations of cities, saved as a JSON file.
+  - The Minimum Spanning Tree using Kruskal's algorithm, providing an optimized subgraph.
+- Result is shown in the application window.
