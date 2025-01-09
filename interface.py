@@ -74,7 +74,7 @@ class ShortestPathApp:
             f"Shortest Path: {path}\n"
             f"Fastest estimated travel time (Dijkstra): {whole_hours}:{minutes} h\n"
             f"Fastest Path: {path_time}\n"
-            f"Shortest Distance (Bellman-Ford): {bell_distance:.2f}\n"
+            f"Shortest Distance (Bellman-Ford): {bell_distance:.2f} km\n"
             f"Path (Bellman-Ford): {bell_path}\n"
             f"Combinations saved to: {combinations_file}\n"
         ))
