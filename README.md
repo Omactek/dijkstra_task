@@ -73,5 +73,5 @@ Contains the following classes and their functionalities:
   - The fastest travel time considering road speeds and types using Dijkstra's algorithm.
   - The shortest path using the Bellman-Ford algorithm, accounting for possible negative weights.
   - All shortest paths for combinations of cities, saved as a JSON file.
-  - The Minimum Spanning Tree using Kruskal's algorithm, providing an optimized subgraph.
-- Result is shown in the application window.
+  - The Minimum Spanning Tree using Kruskal's algorithm.
+- Results are shown in the application window.
