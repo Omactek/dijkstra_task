@@ -66,6 +66,7 @@ class ShortestPathApp:
         bell_dists, bell_parents = self.algorithm.bellman_ford(start_id, mode="basic")
         bell_distance = bell_dists[end_id]
         bell_path = self.algorithm.reconstruct_path(start_id, end_id, bell_parents)
+        mst = self.algorithm.kruskal(mode="basic")
 
         # Results
         self.result_label.config(text=(
@@ -77,4 +78,5 @@ class ShortestPathApp:
             f"Shortest Distance (Bellman-Ford): {bell_distance:.2f} km\n"
             f"Path (Bellman-Ford): {bell_path}\n"
             f"Combinations saved to: {combinations_file}\n"
+            f"Minimum Spanning Tree: {mst}\n"
         ))
