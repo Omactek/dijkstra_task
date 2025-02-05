@@ -30,9 +30,9 @@ class ShortestPath:
 
     def calc_weight(self, weights, mode="basic"):
         if mode=="basic": #basic planar distance
-            return weights[1]
+            return weights[0]
         elif mode=="advanced": #takes into account roads and speed
-            return weights[0]/weights[2]
+            return (weights[0]*(weights[0]/weights[1]))/weights[2]
         else:
             raise ValueError(f"Invalid mode: {mode}. Mode should be either 'basic' or 'advanced'.")
 
