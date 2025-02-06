@@ -19,20 +19,35 @@ class ShortestPathApp:
         self.end_dropdown = ttk.Combobox(root, textvariable=self.end_city)
         self.end_dropdown.grid(row=1, column=1, padx=10, pady=5)
 
+        # Checkboxes for optional calculations
+        self.run_bellman_ford = tk.BooleanVar()
+        self.run_mst = tk.BooleanVar()
+        self.run_all_pairs = tk.BooleanVar()
+
+        self.bellman_ford_checkbox = ttk.Checkbutton(root, text="Run Bellman-Ford", variable=self.run_bellman_ford)
+        self.bellman_ford_checkbox.grid(row=2, column=0, columnspan=2, pady=5)
+
+        self.mst_checkbox = ttk.Checkbutton(root, text="Run MST", variable=self.run_mst)
+        self.mst_checkbox.grid(row=3, column=0, columnspan=2, pady=5)
+
+        self.all_pairs_checkbox = ttk.Checkbutton(root, text="Run All Pairs Combinations", variable=self.run_all_pairs)
+        self.all_pairs_checkbox.grid(row=4, column=0, columnspan=2, pady=5)
+
         # Calculate button
         self.calculate_button = ttk.Button(root, text="Calculate Path", command=self.calculate_path)
-        self.calculate_button.grid(row=2, column=0, columnspan=2, pady=10)
+        self.calculate_button.grid(row=5, column=0, columnspan=2, pady=10)
 
         # Result display
         self.result_label = ttk.Label(root, text="", wraplength=400)
-        self.result_label.grid(row=3, column=0, columnspan=2, pady=10)
+        self.result_label.grid(row=6, column=0, columnspan=2, pady=10)
 
         self.populate_dropdowns()
 
     def populate_dropdowns(self):
         cities = list(self.algorithm.graph.cities.values())
-        self.start_dropdown["values"] = cities
-        self.end_dropdown["values"] = cities
+        sorted_cities = sorted(cities)
+        self.start_dropdown["values"] = sorted_cities
+        self.end_dropdown["values"] = sorted_cities
 
     def calculate_path(self):
         start_name = self.start_city.get()
@@ -60,23 +75,29 @@ class ShortestPathApp:
         whole_hours = int(time)
         minutes = int((time - whole_hours) * 60)
 
-        # Run additional calculations
-        combinations_file = "combinations.json"
-        self.algorithm.calculate_combinations(combinations_file, limit=10, mode="advanced")
-        bell_dists, bell_parents = self.algorithm.bellman_ford(start_id, mode="basic")
-        bell_distance = bell_dists[end_id]
-        bell_path = self.algorithm.reconstruct_path(start_id, end_id, bell_parents)
-        mst = self.algorithm.kruskal(mode="basic")
+        results = [
+            f"Result for route between {start_name} and {end_name}:",
+            f"Shortest distance (Dijkstra): {distance:.2f} km",
+            f"Shortest Path: {path}",
+            f"Fastest estimated travel time (Dijkstra): {whole_hours}:{minutes} h",
+            f"Fastest Path: {path_time}"
+        ]
 
-        # Results
-        self.result_label.config(text=(
-            f"Result for route between {start_name} and {end_name}:\n"
-            f"Shortest distance (Dijkstra): {distance:.2f} km\n"
-            f"Shortest Path: {path}\n"
-            f"Fastest estimated travel time (Dijkstra): {whole_hours}:{minutes} h\n"
-            f"Fastest Path: {path_time}\n"
-            f"Shortest Distance (Bellman-Ford): {bell_distance:.2f} km\n"
-            f"Path (Bellman-Ford): {bell_path}\n"
-            f"Combinations saved to: {combinations_file}\n"
-            f"Minimum Spanning Tree: {mst}\n"
-        ))
+        # Conditional calculations based on checkboxes
+        if self.run_all_pairs.get():
+            combinations_file = "combinations.json"
+            self.algorithm.calculate_combinations(combinations_file, limit=10, mode="advanced")
+            results.append(f"Combinations saved to: {combinations_file}")
+
+        if self.run_bellman_ford.get():
+            bell_dists, bell_parents = self.algorithm.bellman_ford(start_id, mode="basic")
+            bell_distance = bell_dists[end_id]
+            bell_path = self.algorithm.reconstruct_path(start_id, end_id, bell_parents)
+            results.append(f"Shortest Distance (Bellman-Ford): {bell_distance:.2f} km")
+            results.append(f"Path (Bellman-Ford): {bell_path}")
+
+        if self.run_mst.get():
+            mst = self.algorithm.kruskal(mode="basic")
+            results.append(f"Minimum Spanning Tree: {mst}")
+
+        self.result_label.config(text="\n".join(results))
