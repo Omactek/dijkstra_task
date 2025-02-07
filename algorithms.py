@@ -44,9 +44,9 @@ class ShortestPath:
         Calculates the edge weight
         """
         if mode=="basic": #basic planar distance
-            return weights[1]
+            return weights[0]
         elif mode=="advanced": #takes into account roads and speed
-            return weights[0]/weights[2]
+            return (weights[0]*(weights[0]/weights[1]))/weights[2]
         else:
             raise ValueError(f"Invalid mode: {mode}. Mode should be either 'basic' or 'advanced'.")
 
@@ -199,7 +199,7 @@ class ShortestPath:
                 "path": path
             }
 
-        with open(filename, "w") as f:
+        with open(filename, "w", encoding="utf-8") as f:
             json.dump(shortest_paths, f, indent=4)
         
 class DisjointSet:
