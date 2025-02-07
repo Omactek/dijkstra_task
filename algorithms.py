@@ -88,7 +88,7 @@ class ShortestPath:
         """
         Implements the Bellman-Ford algorithm
 
-        Can be used on Graphs with inverted weights
+        Can be used on Graphs with negative weights
 
         Returns:
             - shortest distance between starting and all nodes
