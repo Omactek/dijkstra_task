@@ -4,6 +4,9 @@ from itertools import combinations
 import json
 
 class Graph:
+    """
+    Represents weighted graph
+    """
     def __init__(self):
         self.neighbours = {}
         self.coords = {}
@@ -25,10 +28,21 @@ class Graph:
         return self.cities[city_id]
     
 class ShortestPath:
+    """
+    Provides methods for calculating the shortest path and the minimum spanning tree
+    """
     def __init__(self, graph):
+        """
+        Initializes ShortestPath class
+
+        Expects Graph class object
+        """
         self.graph = graph
 
     def calc_weight(self, weights, mode="basic"):
+        """
+        Calculates the edge weight
+        """
         if mode=="basic": #basic planar distance
             return weights[1]
         elif mode=="advanced": #takes into account roads and speed
@@ -37,6 +51,13 @@ class ShortestPath:
             raise ValueError(f"Invalid mode: {mode}. Mode should be either 'basic' or 'advanced'.")
 
     def dijkstra(self, start, end, mode="basic"):
+        """
+        Implements the Dijkstra algorithm
+
+        Returns:
+            - shortest distance between starting and destination node
+            - parent nodes
+        """
         num_nodes = len(self.graph.neighbours)
         parents = [-1] * (num_nodes + 1)
         dists = [np.inf] * (num_nodes + 1)
@@ -64,6 +85,15 @@ class ShortestPath:
         return dists[end], parents
     
     def bellman_ford(self, start, mode="basic"):
+        """
+        Implements the Bellman-Ford algorithm
+
+        Can be used on Graphs with inverted weights
+
+        Returns:
+            - shortest distance between starting and all nodes
+            - parent nodes
+        """
         num_nodes = len(self.graph.neighbours)
         parents = [-1] * (num_nodes + 1)
         dists = [np.inf] * (num_nodes + 1)
@@ -88,6 +118,14 @@ class ShortestPath:
         return dists, parents
                 
     def kruskal(self, mode="basic"):
+        """
+        Implements the Kruskal algorithm
+
+        Finds the minimum spanning tree
+
+        Returns:
+            - minimum spannig tree
+        """
         edges = [] #weight, node, neighbour
 
         for node, neighbours in self.graph.neighbours.items():
@@ -114,6 +152,12 @@ class ShortestPath:
 
     @staticmethod
     def reconstruct_path(start, end, parents):
+        """
+        Reconstructs the path from the start node to the end node.
+
+        Returns:
+            - Nodes of the reconstucted path
+        """
         path = []
         cur_node = end
 
@@ -128,9 +172,15 @@ class ShortestPath:
         return path[::-1]
     
     def calculate_combinations(self, filename, limit=None, mode="basic"):
+        """"
+        Finds the shortest paths (Dijkstra) between all pairs of city nodes
+
+        Returns:
+            - JSON file with results for all pairs of city nodes
+        """
         city_nodes = self.graph.cities
 
-        if limit:   #only takes first x cities
+        if limit:   #only takes first x cities, processing all cities is very slow
             filtered_city_nodes = dict(list(city_nodes.items())[:limit])    
         else:
             filtered_city_nodes = city_nodes
@@ -153,6 +203,11 @@ class ShortestPath:
             json.dump(shortest_paths, f, indent=4)
         
 class DisjointSet:
+    """
+    Represents disjoint set
+
+    Used in Kruskal algorithm
+    """
     def __init__(self, nodes):
         self.parents = {node: node for node in nodes}
         self.ranks = {node: 0 for node in nodes}
